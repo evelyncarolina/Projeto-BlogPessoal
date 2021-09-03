@@ -24,6 +24,7 @@ public class Usuario {
 	 * "Generate" serve para colocar um incremento ou seja para fazer contagem a partir do 1
 	 */
 	
+	// Testando o GitHub
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY)Long idUsuario;
 	private String nome;
 	private @NotBlank @Email String email;

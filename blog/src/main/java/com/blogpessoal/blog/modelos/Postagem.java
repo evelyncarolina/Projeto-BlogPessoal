@@ -6,10 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity 
 @Table(name = "postagem")
@@ -31,6 +35,16 @@ public class Postagem {
 	@Temporal(TemporalType.TIMESTAMP) // Data da postagem
     private Date data = new java.sql.Date(System.currentTimeMillis());
 	
+	@ManyToOne
+	@JoinColumn(name = "relacionador_id")
+	@JsonIgnoreProperties({"minhasPostagens"})
+	private Usuario usuarioRelacionador;
+	
+	@ManyToOne
+	@JoinColumn(name = "tema_id")
+	@JsonIgnoreProperties({"meuTema"})
+	private Usuario temaRelacionador;
+	
 	public Long getIdPostagem() {
 		return idPostagem;
 	}
@@ -49,6 +63,25 @@ public class Postagem {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+	public Date getData() {
+		return data;
+	}
+	public void setData(Date data) {
+		this.data = data;
+	}
+	public Usuario getUsuarioRelacionador() {
+		return usuarioRelacionador;
+	}
+	public void setUsuarioRelacionador(Usuario usuarioRelacionador) {
+		this.usuarioRelacionador = usuarioRelacionador;
+	}
+	public Usuario getTemaRelacionador() {
+		return temaRelacionador;
+	}
+	public void setTemaRelacionador(Usuario temaRelacionador) {
+		this.temaRelacionador = temaRelacionador;
+	}
+	
 	
 	
 }

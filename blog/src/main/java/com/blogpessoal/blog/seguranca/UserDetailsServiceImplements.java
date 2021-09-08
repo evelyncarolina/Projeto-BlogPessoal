@@ -1,0 +1,29 @@
+package com.blogpessoal.blog.seguranca;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.blogpessoal.blog.modelos.Usuario;
+import com.blogpessoal.blog.repositorio.UsuarioRepositorio;
+
+@Service
+public class UserDetailsServiceImplements implements UserDetailsService {
+
+	@Autowired
+	private UsuarioRepositorio userRepository;
+
+	@Override
+	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+
+		Optional<Usuario> user = userRepository.findByUsuario(userName);
+		user.orElseThrow(() -> new UsernameNotFoundException(userName + " not found."));
+
+		return user.map(UserDetailsImplements ::new).get();
+	}
+	
+}

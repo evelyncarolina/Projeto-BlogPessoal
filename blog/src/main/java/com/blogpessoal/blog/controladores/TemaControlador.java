@@ -25,7 +25,7 @@ public class TemaControlador {
 	private @Autowired TemaRepositorio repositorio;
 
 	@GetMapping("/todos")
-	private ResponseEntity<List<Tema>> pegarTodos() {
+	public ResponseEntity<List<Tema>> pegarTodos() {
 		List<Tema> objetoTema = repositorio.findAll();
 
 		if (objetoTema.isEmpty()) {
@@ -38,7 +38,7 @@ public class TemaControlador {
 	}
 
 	@GetMapping("/id/{todosId}")
-	private ResponseEntity<Tema> buscaId(@PathVariable(value = "todosId") Long idTema) {
+	public ResponseEntity<Tema> buscaId(@PathVariable(value = "todosId") Long idTema) {
 
 		Optional<Tema> objetoId = repositorio.findById(idTema);
 
@@ -52,13 +52,13 @@ public class TemaControlador {
 	}
 
 	@PutMapping("/atualizar")
-	private ResponseEntity<Tema> salvarId(@Valid @RequestBody Tema paraSalvar){
+	public ResponseEntity<Tema> salvarId(@Valid @RequestBody Tema paraSalvar){
 		
 		return ResponseEntity.status(200).body(repositorio.save(paraSalvar));	
 	}
 
 	@DeleteMapping("/deletar{deletarId}")
-	private void Delete (@PathVariable (value = "deletarId") Long paraDeletar) {
+	public void Delete (@PathVariable (value = "deletarId") Long paraDeletar) {
 		repositorio.deleteById(paraDeletar);
 	}
 	

@@ -18,115 +18,101 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.blogpessoal.blog.modelos.Usuario;
+import com.blogpessoal.blog.modelos.UsuarioLogin;
 import com.blogpessoal.blog.repositorio.UsuarioRepositorio;
+import com.blogpessoal.blog.servico.UsuarioServico;
 
 @RestController
 @RequestMapping("/api/v1/usuario")
 public class UsuarioControlador {
-	
+
 	private @Autowired UsuarioRepositorio repositorio;
-	
+	private @Autowired UsuarioServico servicos;
+
 	@GetMapping("/todos")
-	public ResponseEntity<List<Usuario>> pegarTodos()
-	{
-	List<Usuario> objetoLista = repositorio.findAll();
-	
-	/*Essa logica é para voltar o "status" certo*/
-	
-		if(objetoLista.isEmpty())
-		{
-			//Se a lista estiver vazia volta o status "204"
+	public ResponseEntity<List<Usuario>> pegarTodos() {
+		List<Usuario> objetoLista = repositorio.findAll();
+
+		if (objetoLista.isEmpty()) {
 			return ResponseEntity.status(204).build();
 		}
-		
-		else
-		{
-			//Se a lista tiver dados do usuario o status volta "objetoLista", o proprio dados do usuarios
+
+		else {
 			return ResponseEntity.status(200).body(objetoLista);
 		}
-	
+
 	}
-	
-		//Metodo para salvar o usuario no banco de dados
-		
-		@PostMapping("/salvar")
-		public ResponseEntity<Usuario> salvar(@Valid @RequestBody Usuario novoUsuario)
-		{
-			return ResponseEntity.status(201).body(repositorio.save(novoUsuario));
-		}
-		
-		@GetMapping("/{id_usuario}")
-		public ResponseEntity<Usuario> buscarPorId(@PathVariable(value = "id_usuario") Long idUsuario)
-		{
-			Optional<Usuario> objetoUsuario = repositorio.findById(idUsuario);
-			
-			if(objetoUsuario.isPresent())
-			{
-				return ResponseEntity.status(200).body(objetoUsuario.get());
-			}
 
-			else
-			{
-				return ResponseEntity.status(204).build();
-			}
+	@PostMapping("/salvar")
+	public ResponseEntity<Object> salvar(@Valid @RequestBody Usuario novoUsuario) {
+		Optional<Object> objetoSalvar = servicos.cadastrarUsuario(novoUsuario);
+
+		if (objetoSalvar.isEmpty()) {
+			return ResponseEntity.status(400).build();
+		} else {
+			return ResponseEntity.status(201).body(objetoSalvar.get());
 		}
-		
-		@GetMapping("/nome/{nome_usuario}")
-		public ResponseEntity<List<Usuario>> buscarPorNomeI(@PathVariable(value = "nome_usuario") String nome)
-		{
-			List<Usuario> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
-			
-			if (objetoLista.isEmpty()) 
-			{
-				return ResponseEntity.status(204).build();
-			} 
-			
-			else 
-			{
-				return ResponseEntity.status(200).body(objetoLista);
-			}
+	}
+
+	@GetMapping("/{id_usuario}")
+	public ResponseEntity<Usuario> buscarPorId(@PathVariable(value = "id_usuario") Long idUsuario) {
+		Optional<Usuario> objetoUsuario = repositorio.findById(idUsuario);
+
+		if (objetoUsuario.isPresent()) {
+			return ResponseEntity.status(200).body(objetoUsuario.get());
 		}
-		
-		@GetMapping("/pesquisa")
-		public ResponseEntity<List<Usuario>> buscarPorNomeII(@RequestParam(defaultValue = "") String nome)
-		{
-			List<Usuario> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
-			
-			if (objetoLista.isEmpty()) {
-				return ResponseEntity.status(204).build();
-			} 
-			
-			else 
-			{
-				return ResponseEntity.status(200).body(objetoLista);
-			}
+
+		else {
+			return ResponseEntity.status(204).build();
 		}
-		
-		@PutMapping("/atualizar")
-		public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuarioParaAtualizar)
-		{
-			return ResponseEntity.status(201).body(repositorio.save(usuarioParaAtualizar));
+	}
+
+	@PutMapping("/credenciais")
+	public ResponseEntity<Object> credenciais(@Valid @RequestBody UsuarioLogin usuarioAutenticar) {
+		Optional<?> objetoCredenciais = servicos.autenticador(usuarioAutenticar);
+
+		if (objetoCredenciais.isEmpty()) {
+			return ResponseEntity.status(400).build();
+		} else {
+			return ResponseEntity.status(201).body(objetoCredenciais.get());
 		}
-		
-		@DeleteMapping("/deletar/{id_usuario}")
-		public void deletarUsuarioPorId(@PathVariable(value = "id_usuario") Long idUsuario) 
-		
-		{
-			repositorio.deleteById(idUsuario);
+	}
+
+	@GetMapping("/nome/{nome_usuario}")
+	public ResponseEntity<List<Usuario>> buscarPorNomeI(@PathVariable(value = "nome_usuario") String nome) {
+		List<Usuario> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
+
+		if (objetoLista.isEmpty()) {
+			return ResponseEntity.status(204).build();
 		}
+
+		else {
+			return ResponseEntity.status(200).body(objetoLista);
+		}
+	}
+
+	@GetMapping("/pesquisa")
+	public ResponseEntity<List<Usuario>> buscarPorNomeII(@RequestParam(defaultValue = "") String nome) {
+		List<Usuario> objetoLista = repositorio.findAllByNomeContainingIgnoreCase(nome);
+
+		if (objetoLista.isEmpty()) {
+			return ResponseEntity.status(204).build();
+		}
+
+		else {
+			return ResponseEntity.status(200).body(objetoLista);
+		}
+	}
+
+	@PutMapping("/atualizar")
+	public ResponseEntity<Usuario> atualizar(@Valid @RequestBody Usuario usuarioParaAtualizar) {
+		return ResponseEntity.status(201).body(repositorio.save(usuarioParaAtualizar));
+	}
+
+	@DeleteMapping("/deletar/{id_usuario}")
+	public void deletarUsuarioPorId(@PathVariable(value = "id_usuario") Long idUsuario)
+
+	{
+		repositorio.deleteById(idUsuario);
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

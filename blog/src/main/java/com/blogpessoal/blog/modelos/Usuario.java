@@ -30,6 +30,7 @@ public class Usuario {
 
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY)Long idUsuario;
 	private String nome;
+	private @NotBlank @Size(min = 6) String usuario;
 	private @NotBlank @Email String email;
 	private @NotBlank @Size(min = 6) String senha;
 	
@@ -48,6 +49,12 @@ public class Usuario {
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
 	}
 	public String getEmail() {
 		return email;

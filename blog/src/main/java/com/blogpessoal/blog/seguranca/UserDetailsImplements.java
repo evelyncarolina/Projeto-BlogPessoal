@@ -14,7 +14,7 @@ public class UserDetailsImplements implements UserDetails {
 	
 	private static final long SerialVersionUID = 1L;
 	
-	private String userName;
+	private String userName; 
 	private String password;
 	
 	public UserDetailsImplements(Usuario user) {

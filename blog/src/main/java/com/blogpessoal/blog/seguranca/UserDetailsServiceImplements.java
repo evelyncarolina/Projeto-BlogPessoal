@@ -15,15 +15,18 @@ import com.blogpessoal.blog.repositorio.UsuarioRepositorio;
 public class UserDetailsServiceImplements implements UserDetailsService {
 
 	@Autowired
-	private UsuarioRepositorio userRepository;
+	private UsuarioRepositorio repositorio;
 
 	@Override
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 
-		Optional<Usuario> user = userRepository.findByUsuario(userName);
-		user.orElseThrow(() -> new UsernameNotFoundException(userName + " not found."));
-
-		return user.map(UserDetailsImplements ::new).get();
+		Optional<Usuario> objetoOptional = repositorio.findByEmail(userName);
+		
+		if (objetoOptional.isPresent()) {
+			return new UserDetailsImplements(objetoOptional.get());			
+		} else {
+			throw new UsernameNotFoundException(userName + "Não existe!");
+		}
 	}
 	
 }

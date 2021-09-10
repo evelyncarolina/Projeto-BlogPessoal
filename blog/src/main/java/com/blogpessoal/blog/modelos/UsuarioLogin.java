@@ -13,6 +13,15 @@ public class UsuarioLogin {
 	private String token;
 	
 	
+	public UsuarioLogin(String email, String senha, Long id, String nome) {
+		this.email = email;
+		this.senha = senha;
+		this.id = id;
+		this.nome = nome;
+	}
+	public UsuarioLogin() {
+		
+	}
 	public String getEmail() {
 		return email;
 	}
